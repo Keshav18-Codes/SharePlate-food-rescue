@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Edit Listing - SharePlate{% endblock %}
+{% block content %}
+
+<section class="form-card">
+  <h1>Edit Listing</h1>
+  <form method="POST" enctype="multipart/form-data" class="stacked-form">
+
+    <label for="title">Food title</label>
+    <input type="text" id="title" name="title"
+           value="{{ form.title if form else listing.title }}" required
+           placeholder="e.g. Fresh Bread Loaves">
+
+    <label for="category">Category</label>
+    <input type="text" id="category" name="category"
+           value="{{ form.category if form else listing.category }}" required
+           placeholder="Bakery, Produce, Dairy, Cooked Meals...">
+
+    <label for="diet_type">Diet type</label>
+    {% set current_diet = form.diet_type if form else listing.diet_type %}
+    <select id="diet_type" name="diet_type">
+      <option value="veg" {% if current_diet == 'veg' %}selected{% endif %}>Vegetarian</option>
+      <option value="non_veg" {% if current_diet == 'non_veg' %}selected{% endif %}>Non-Vegetarian</option>
+    </select>
+
+    <div class="two-col">
+      <div>
+        <label for="quantity">Quantity</label>
+        <input type="number" step="0.01" min="0.01" id="quantity" name="quantity"
+               value="{{ form.quantity if form else listing.quantity }}" required>
+      </div>
+      <div>
+        <label for="unit">Unit</label>
+        {% set current_unit = form.unit if form else listing.unit %}
+        <select id="unit" name="unit">
+          <option value="kg" {% if current_unit == 'kg' %}selected{% endif %}>kg</option>
+          <option value="pieces" {% if current_unit == 'pieces' %}selected{% endif %}>pieces</option>
+          <option value="liters" {% if current_unit == 'liters' %}selected{% endif %}>liters</option>
+          <option value="packs" {% if current_unit == 'packs' %}selected{% endif %}>packs</option>
+        </select>
+      </div>
+    </div>
+
+   
+
+    <label for="expiry_at">Best used before</label>
+    <input type="datetime-local" id="expiry_at" name="expiry_at"
+           value="{{ form.expiry_at if form else listing.expiry_at.strftime('%Y-%m-%dT%H:%M') }}" required>
+
+    {% set current_type = form.listing_type if form else listing.listing_type %}
+    <fieldset class="pricing-toggle">
+      <legend>Pricing</legend>
+      <label class="radio-label">
+        <input type="radio" name="listing_type" value="donation"
+               {% if current_type == 'donation' %}checked{% endif %}
+               onchange="ShareplatePricing.toggle(this)">
+        Free Donation
+      </label>
+      <label class="radio-label">
+        <input type="radio" name="listing_type" value="sale"
+               {% if current_type == 'sale' %}checked{% endif %}
+               onchange="ShareplatePricing.toggle(this)">
+        Discounted Sale
+      </label>
+
+      <div id="sale-fields" class="two-col {{ '' if current_type == 'sale' else 'hidden' }}">
+        <div>
+          <label for="original_price">Original price (₹)</label>
+          <input type="number" step="0.01" min="0" id="original_price" name="original_price"
+                 value="{{ form.original_price if form else (listing.original_price or '') }}">
+        </div>
+        <div>
+          <label for="sale_price">Marked-down price (₹)</label>
+          <input type="number" step="0.01" min="0" id="sale_price" name="sale_price"
+                 value="{{ form.sale_price if form else (listing.sale_price or '') }}"
+                 {% if current_type == 'sale' %}required{% endif %}>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="two-col">
+      <button type="submit" class="btn">Save Changes</button>
+      <a class="btn btn-secondary" href="{{ url_for('provider.dashboard') }}">Cancel</a>
+    </div>
+  </form>
+</section>
+
+<script src="{{ url_for('static', filename='js/pricing_toggle.js') }}"></script>
+
+{% endblock %}

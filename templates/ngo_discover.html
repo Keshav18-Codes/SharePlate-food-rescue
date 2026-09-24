@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Discover Food - SharePlate{% endblock %}
+{% block content %}
+
+<h1>Live Discovery Feed</h1>
+
+<form method="GET" class="filter-bar">
+  <label>
+    Diet
+    <select name="diet">
+      <option value="" {{ 'selected' if not diet }}>All</option>
+      <option value="veg" {{ 'selected' if diet == 'veg' }}>Vegetarian</option>
+      <option value="non_veg" {{ 'selected' if diet == 'non_veg' }}>Non-Vegetarian</option>
+    </select>
+  </label>
+  <label>
+    Min quantity
+    <input type="number" step="0.01" min="0" name="min_qty" value="{{ min_qty }}">
+  </label>
+  <button type="submit" class="btn-small">Apply Filters</button>
+</form>
+
+{% if not listings %}
+  <p class="empty-state">No surplus food matching your filters right now. Check back soon.</p>
+{% else %}
+<div class="card-grid" id="listing-grid">
+  {% for l in listings %}
+  <div class="listing-card"
+       data-lat="{{ l.provider_lat or '' }}"
+       data-lng="{{ l.provider_lng or '' }}">
+    {% if l.photo_path %}
+      <img class="listing-photo" src="{{ url_for('uploaded_food_photo', filename=l.photo_path) }}" alt="{{ l.title }}">
+    {% endif %}
+    <div class="listing-body">
+      <h3>{{ l.title }}</h3>
+      <p class="tag-row">
+        <span class="tag">{{ l.category }}</span>
+        <span class="tag">{{ 'Veg' if l.diet_type == 'veg' else 'Non-Veg' }}</span>
+      </p>
+      <p>{{ l.quantity }} {{ l.unit }} available</p>
+      <p>
+        {% if l.listing_type == 'donation' %}
+          <strong>Free Donation</strong>
+        {% else %}
+          <strong>₹{{ l.sale_price }}</strong> <span class="strike">₹{{ l.original_price }}</span>
+        {% endif %}
+      </p>
+      <p class="muted">From {{ l.provider_name }} &mdash; {{ l.provider_address }}</p>
+      <p class="muted distance-label">Distance: --</p>
+      <p class="muted">Expires: {{ l.expiry_at }}</p>
+
+      <form method="POST" action="{{ url_for('ngo.claim', listing_id=l.id) }}" class="claim-form">
+        <select name="pickup_type" required>
+          <option value="" disabled selected>Pickup option</option>
+          <option value="self_pickup">Self-Pickup</option>
+          <option value="request_delivery">Request Delivery</option>
+        </select>
+        <button type="submit" class="btn-small">Claim</button>
+      </form>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<script>
+  window.SHAREPLATE_NGO_LAT = {{ ngo_lat | tojson }};
+  window.SHAREPLATE_NGO_LNG = {{ ngo_lng | tojson }};
+</script>
+<script src="{{ url_for('static', filename='js/distance.js') }}"></script>
+{% endblock %}

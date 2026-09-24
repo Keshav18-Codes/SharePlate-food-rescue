@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Delivery Requests - SharePlate{% endblock %}
+{% block content %}
+
+<h1>Open Delivery Requests</h1>
+{% if not open_requests %}
+  <p class="empty-state">No delivery requests right now.</p>
+{% else %}
+<div class="simple-list">
+  {% for d in open_requests %}
+  <div class="simple-list-item">
+    <div>
+      <strong>{{ d.title }}</strong> &mdash; {{ d.quantity }} {{ d.unit }}
+      <p class="muted">Pickup: {{ d.provider_name }}, {{ d.provider_address }}</p>
+      <p class="muted">Drop-off: {{ d.ngo_name }}, {{ d.ngo_address }}</p>
+    </div>
+    <form method="POST" action="{{ url_for('volunteer.book', delivery_id=d.delivery_id) }}">
+      <button type="submit" class="btn-small">Book This Delivery</button>
+    </form>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<h2 class="section-heading">My Deliveries</h2>
+{% if not my_deliveries %}
+  <p class="empty-state">You haven't booked any deliveries yet.</p>
+{% else %}
+<div class="simple-list">
+  {% for d in my_deliveries %}
+  <div class="simple-list-item">
+    <div>
+      <strong>{{ d.title }}</strong> &mdash; {{ d.quantity }} {{ d.unit }}
+      <p class="muted">{{ d.provider_name }} → {{ d.ngo_name }}</p>
+      <span class="tag tag-{{ d.status }}">{{ d.status }}</span>
+    </div>
+    {% if d.status == 'booked' %}
+      <a class="btn-small" href="{{ url_for('volunteer.booking', delivery_id=d.delivery_id) }}">Open</a>
+    {% elif d.status == 'delivered' %}
+      <a class="btn-small" href="{{ url_for('volunteer.done', delivery_id=d.delivery_id) }}">View</a>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}

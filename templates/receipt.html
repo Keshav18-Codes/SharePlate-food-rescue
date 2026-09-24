@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Receipt #{{ receipt.id }} - SharePlate{% endblock %}
+{% block content %}
+
+<section class="receipt-card">
+  <h1>Receipt #{{ receipt.id }}</h1>
+  <p class="muted">{{ receipt.created_at }}</p>
+
+  <table class="receipt-detail-table">
+    <tr><th>Item</th><td>{{ receipt.listing_title }}</td></tr>
+    <tr><th>Quantity</th><td>{{ receipt.quantity }} {{ receipt.unit }}</td></tr>
+    <tr><th>Provider</th><td>{{ receipt.provider_name }}</td></tr>
+    <tr><th>Provider Address</th><td>{{ receipt.provider_address }}</td></tr>
+    <tr><th>Type</th><td>{{ 'Free Donation' if receipt.receipt_type == 'donation' else 'Discounted Sale' }}</td></tr>
+    <tr><th>Amount Paid</th><td>{{ ('₹' ~ receipt.amount) if receipt.receipt_type == 'sale' else '₹0 (donation)' }}</td></tr>
+  </table>
+
+  <a class="btn" href="{{ url_for('ngo.dashboard') }}">Back to My Receipts</a>
+</section>
+
+{% endblock %}

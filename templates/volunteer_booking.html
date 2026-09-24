@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Booking - SharePlate{% endblock %}
+{% block content %}
+
+<section class="booking-card">
+  <h1>Delivery Booked ✅</h1>
+  <p class="muted">Booking reference #{{ delivery.delivery_id }}</p>
+
+  <div class="booking-route">
+    <div class="route-stop">
+      <span class="route-label">Pickup</span>
+      <strong>{{ delivery.provider_name }}</strong>
+      <p>{{ delivery.provider_address }}</p>
+      <p class="muted">{{ delivery.provider_phone }}</p>
+    </div>
+    <div class="route-arrow">→</div>
+    <div class="route-stop">
+      <span class="route-label">Drop-off</span>
+      <strong>{{ delivery.ngo_name }}</strong>
+      <p>{{ delivery.ngo_address }}</p>
+      <p class="muted">{{ delivery.ngo_phone }}</p>
+    </div>
+  </div>
+
+  <p><strong>Item:</strong> {{ delivery.title }} &mdash; {{ delivery.quantity }} {{ delivery.unit }}</p>
+
+  <form method="POST" action="{{ url_for('volunteer.mark_delivered', delivery_id=delivery.delivery_id) }}">
+    <button type="submit" class="btn">Mark as Delivered</button>
+  </form>
+</section>
+
+{% endblock %}

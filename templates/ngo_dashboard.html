@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}My Receipts - SharePlate{% endblock %}
+{% block content %}
+
+<h1>My Receipts</h1>
+
+{% if not receipts %}
+  <p class="empty-state">You haven't claimed anything yet. <a href="{{ url_for('ngo.discover') }}">Browse the discovery feed</a>.</p>
+{% else %}
+<table class="receipt-table">
+  <thead>
+    <tr><th>Date</th><th>Item</th><th>Provider</th><th>Type</th><th>Amount</th><th></th></tr>
+  </thead>
+  <tbody>
+    {% for r in receipts %}
+    <tr>
+      <td>{{ r.created_at }}</td>
+      <td>{{ r.listing_title }}</td>
+      <td>{{ r.provider_name }}</td>
+      <td>{{ 'Donation' if r.receipt_type == 'donation' else 'Sale' }}</td>
+      <td>{{ '₹' ~ r.amount if r.receipt_type == 'sale' else '—' }}</td>
+      <td><a href="{{ url_for('ngo.receipt', receipt_id=r.id) }}">View</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+{% endblock %}

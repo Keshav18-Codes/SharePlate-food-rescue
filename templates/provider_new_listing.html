@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}List Surplus Food - SharePlate{% endblock %}
+{% block content %}
+
+<section class="form-card">
+  <h1>List Surplus Food</h1>
+  <form method="POST" enctype="multipart/form-data" class="stacked-form">
+
+    <label for="title">Food title</label>
+    <input type="text" id="title" name="title" value="{{ form.title if form else '' }}" required placeholder="e.g. Fresh Bread Loaves">
+
+    <label for="category">Category</label>
+    <input type="text" id="category" name="category" value="{{ form.category if form else '' }}" required placeholder="Bakery, Produce, Dairy, Cooked Meals...">
+
+    <label for="diet_type">Diet type</label>
+    <select id="diet_type" name="diet_type">
+      <option value="veg">Vegetarian</option>
+      <option value="non_veg">Non-Vegetarian</option>
+    </select>
+
+    <div class="two-col">
+      <div>
+        <label for="quantity">Quantity</label>
+        <input type="number" step="0.01" min="0.01" id="quantity" name="quantity" required>
+      </div>
+      <div>
+        <label for="unit">Unit</label>
+        <select id="unit" name="unit">
+          <option value="kg">kg</option>
+          <option value="pieces">pieces</option>
+          <option value="liters">liters</option>
+          <option value="packs">packs</option>
+        </select>
+      </div>
+    </div>
+
+
+
+    <label for="expiry_at">Best used before</label>
+    <input type="datetime-local" id="expiry_at" name="expiry_at" required>
+
+    <fieldset class="pricing-toggle">
+      <legend>Pricing</legend>
+      <label class="radio-label">
+        <input type="radio" name="listing_type" value="donation" checked onchange="ShareplatePricing.toggle(this)">
+        Free Donation
+      </label>
+      <label class="radio-label">
+        <input type="radio" name="listing_type" value="sale" onchange="ShareplatePricing.toggle(this)">
+        Discounted Sale
+      </label>
+
+      <div id="sale-fields" class="two-col hidden">
+        <div>
+          <label for="original_price">Original price (₹)</label>
+          <input type="number" step="0.01" min="0" id="original_price" name="original_price">
+        </div>
+        <div>
+          <label for="sale_price">Marked-down price (₹)</label>
+          <input type="number" step="0.01" min="0" id="sale_price" name="sale_price">
+        </div>
+      </div>
+    </fieldset>
+
+    <button type="submit" class="btn">Post Listing</button>
+  </form>
+</section>
+
+<script src="{{ url_for('static', filename='js/pricing_toggle.js') }}"></script>
+
+{% endblock %}

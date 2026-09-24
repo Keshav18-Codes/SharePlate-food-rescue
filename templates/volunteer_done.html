@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Delivery Complete - SharePlate{% endblock %}
+{% block content %}
+
+<section class="booking-card done-card">
+  <h1>Delivery Complete 🎉</h1>
+  <p>Thank you for delivering <strong>{{ delivery.title }}</strong> to {{ delivery.ngo_name }}.</p>
+  <p class="muted">Delivered at {{ delivery.delivered_at }}</p>
+
+  <a class="btn" href="{{ url_for('volunteer.dashboard') }}">Back to Delivery Requests</a>
+</section>
+
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}SharePlate - Rescue Surplus Food{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <h1>Rescue surplus food. Feed more people.</h1>
+  <p>SharePlate connects shops with surplus food to NGOs who can put it to use, with volunteers handling delivery when needed.</p>
+</section>
+
+<section class="role-grid">
+  <div class="role-card">
+    <h2>🏪 Food Provider</h2>
+    <p>List your surplus food as a free donation or a discounted sale.</p>
+    <a class="btn" href="{{ url_for('auth.register', role='provider') }}">Register as Provider</a>
+  </div>
+
+  <div class="role-card">
+    <h2>🤝 NGO</h2>
+    <p>Discover nearby surplus food in real time and claim it in one click.</p>
+    <a class="btn" href="{{ url_for('auth.register', role='ngo') }}">Register as NGO</a>
+  </div>
+
+  <div class="role-card">
+    <h2>🚴 Volunteer</h2>
+    <p>Help deliver claimed food from providers to NGOs.</p>
+    <a class="btn" href="{{ url_for('auth.register', role='volunteer') }}">Register as Volunteer</a>
+  </div>
+</section>
+
+<p class="center-link">Already have an account? <a href="{{ url_for('auth.login') }}">Log in</a></p>
+
+{% endblock %}
