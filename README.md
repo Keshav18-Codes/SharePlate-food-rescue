@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # SharePlate
 
 A food-rescue web app connecting **Food Providers** (shopkeepers with surplus
@@ -94,3 +95,6 @@ shareplate_flask/
 - Expired listings aren't auto-expired by a background job; you could
   add a simple check comparing `expiry_at` to `NOW()` if you want that
   for the demo.
+=======
+# SharePlate-food-rescue
+>>>>>>> 39403f3aaea090b1bffc9278608d1ca68bfb2b68
